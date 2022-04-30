@@ -1,0 +1,20 @@
+
+name: GA
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v3
+      
+      - name: Set up Poetry
+        run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+        
+      - name: install packages
+        run: cd ./... && poetry install -n
+
+      - name: Test
+        run: pytest test -v ./...
