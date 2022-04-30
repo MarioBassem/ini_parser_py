@@ -15,4 +15,4 @@ jobs:
         run: pip install -U pytest
 
       - name: Test
-        run: pytest test -v /
+        run: pytest test -v /${GITHUB_WORKSPACE} 
