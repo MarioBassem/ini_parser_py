@@ -15,4 +15,4 @@ jobs:
         run: pip install -U pytest
 
       - name: Test
-        run: pytest test -v /home/runner/work/ini_parser_py/ini_parser_py
+        run: pytest /home/runner/work/ini_parser_py/ini_parser_py/test_parser.py
