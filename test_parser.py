@@ -1,21 +1,24 @@
-from parser import Parser, validateKey, validateSection, validateValue, isSection, isKeyVal
+from parser import Parser, validateKey, validateSection, validateVal, isSection, isKeyVal
 import pytest
 
 @pytest.fixture
 def input():
-    return [['s', True], ['', False], ['s s', False], ['s;s', False]]
+    return [' ', 's s', 's;s']
 
 def test_SectionValidation(input):
-    for section, validity in input:
-        assert validateSection(section) == validity
+    for section in input:
+        with pytest.raises(ValueError):
+            validateSection(section)
     
 def test_KeyValidation(input):
-    for key, validity in input:
-        assert validateKey(key) == validity
+    for key in input:
+        with pytest.raises(ValueError):
+            validateKey(key)
 
 def test_ValueValidation(input):
-    for val, validity in input:
-        assert validateValue(val) == validity
+    for val in input:
+        with pytest.raises(ValueError):
+            validateVal(val)
 
 def test_isSection():
     notSection = ['[]', '[', ']', 's = s', '']
@@ -31,38 +34,26 @@ def test_isKeyVal():
 
 def test_addFromString():
     p = Parser()
-    str = "[s1]\nk1=v1\n\n[s2]\nk2=\n\n"
-    p.addFromString(str)
-    assert ('s1' in p._parser.keys()) == True
-    assert p._parser['s1']['k1'] == 'v1'
-    assert ('s2' in p._parser.keys()) == True
-    assert ('k2=' not in p._parser['s2'].keys()) == True
+    #test adding a non-valid string
+    nonValidStr = "[s1]\nk1=v1\n\n[s2]\nk2=\n\n"
+    with pytest.raises(ValueError):
+        p.addFromString(nonValidStr)
+    
+    # test adding a valid string
+    validStr = "[s1]\nk1=v1\n\n[s2]\nk2=v2\n\n"
+    p.addFromString(validStr)
+    assert ('s1' in p.keys()) == True
+    assert p['s1']['k1'] == 'v1'
+    assert ('s2' in p.keys()) == True
+    assert ('k2=' not in p['s2'].keys()) == True
 
-
-
-def test_addFromDict():
-    p = Parser()
-    d = {'s' : {'k': 'v'}, 's2' : {'k2': 'v2'}}
-    p.addFromDict(d)
-    for s, kv in d.items():
-        assert (s in p._parser.keys()) == True
-        for key, val in kv.items():
-            assert p._parser[s][key] == d[s][key]
-        
-
-
-def test_addKeyValPair():
-    p = Parser()
-    p._Parser__addKeyValuePair({'k': 'v'})
-    assert ('default' in p._parser.keys()) == True
-    assert p._parser['default']['k'] == 'v'
-
-def test_addSection():
-    p = Parser()
-    p._Parser__addSection('s')
-    assert ('s' in p._parser.keys()) == True
 
 #TODO
+def test_addKeyValPair():
+    pass
+
+def test_addSection():
+    pass
 
 def test_writeToFile():
     pass
