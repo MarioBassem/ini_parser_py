@@ -75,16 +75,16 @@ class Parser(dict):
 
 
 def validateKey(key):
-    if key == '' or ' ' in key or ';' in key :
+    if key == '' or ' ' in key or ';' in key or '\n' in key or '\t' in key :
         raise ValueError(f'Syntax error: key "{key}" is not valid.')
     
 
 def validateVal(val):
-    if val == '' or ' ' in val or ';' in val :
+    if val == '' or ' ' in val or ';' in val or '\n' in val or '\t' in val:
         raise ValueError(f'Syntax error: value "{val}" is not valid.')
 
 def validateSection(section):
-    if section == '' or ' ' in section or ';' in section :
+    if section == '' or ' ' in section or ';' in section or '\n' in section or '\t' in section:
         raise ValueError(f'Syntax error: section "{section}" is not valid.')
 
 def isSection(str):
